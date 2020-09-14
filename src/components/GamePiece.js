@@ -2,7 +2,6 @@ import React from 'react'
 import "./GamePiece.css"
 
 function GamePiece({ id, text, speed, gameStarted }) {
-    const animationStyle = gameStarted ? `marquee ${speed}s linear forwards` : '';
     const style = {
         animation: gameStarted ? `marquee ${speed}s linear forwards` : '',
         display: gameStarted ? 'block' : 'none'
