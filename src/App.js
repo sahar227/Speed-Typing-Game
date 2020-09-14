@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Header from './components/Header'
 import Body from './components/Body'
@@ -12,7 +12,7 @@ function App() {
       <div className="App">
         <Header />
         <Body />
-        <GameBoard />
+        <GameBoard/>
       </div>
     </>
   );

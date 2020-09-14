@@ -1,27 +1,16 @@
-import React, { useEffect } from 'react'
+import React, {useState} from 'react'
 import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
 
 function GameBoard() {
-    var all_data = [{ text: "Hello", speed: 6 }, { text: "my", speed: 2 }, { text: "TEST", speed: 3 }];
+    const [gameStarted, setGameStarted] = useState(false);
 
-    var all_pieces = all_data.map((data, index) =>
-        <GamePiece id={index} text={data.text} speed={data.speed} />
+    const all_data = [{ text: "Hello", speed: 6 }, { text: "my", speed: 2 }, { text: "TEST", speed: 3 }];
+    const all_pieces = all_data.map((data, index) =>
+        <GamePiece key={index} id={index} text={data.text} speed={data.speed} gameStarted={gameStarted}/>
     )
-
-    useEffect(() => {
-        var game_txt = document.getElementById('game_txt')
-
-        game_txt.addEventListener("onKeyUp", Check);
-        var Check = function (e) {
-            console.log("hi")
-            if (e.keyCode === 13) {
-                game_txt[0].value = "";
-            }
-        }
-    });
 
     return (
         <>
@@ -29,7 +18,7 @@ function GameBoard() {
                 {all_pieces}
             </div>
             <div className="buttonsRow">
-                <Button className="start_game_btn" variant="contained" color="primary">
+                <Button className="start_game_btn" variant="contained" color="primary" onClick={() => setGameStarted(true)}>
                     Start Game
                 </Button >
                 <br />
