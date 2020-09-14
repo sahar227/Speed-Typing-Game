@@ -1,0 +1,15 @@
+.gameBoard {
+    border: 1px solid silver;
+    width: 50%;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.start_game_btn {
+    top: 10px;
+}
+.game_txt {
+    margin: 20px;
+    width: 50%;
+}
