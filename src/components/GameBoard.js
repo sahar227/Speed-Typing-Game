@@ -8,21 +8,30 @@ function GameBoard({addToScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
+    const [nextWordIndex, setNextWordIndex] = useState(0);
 
     const all_data = [{ text: "Hello", speed: 6 }, { text: "my", speed: 2 }, { text: "TEST", speed: 3 }];
+    const addWord = () => {
+        // TODO: Add random word from all_data, make sure to not add same word twice
+        setActiveWords((prev) => [...prev, all_data[nextWordIndex % all_data.length]]);
+        setNextWordIndex(prev => prev + 1);
+    }
+    const removeWord = (word) => {
+        setActiveWords(prev => prev.filter(data => data.text !== word));
+    };
+
     useEffect(() => {
         if(!gameStarted)
             return;
         const interval = setInterval(() => {
-            // TODO: Add random word from all_data, make sure to not add same word twice
-            setActiveWords((prev) => [...prev, all_data[0]]);
+            addWord();
         // TODO: Consider making the interval shorten over time
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted]);
+    }, [gameStarted, nextWordIndex]);
 
-    const all_pieces = activeWords.map((data, index) =>
-        <GamePiece key={index} id={index} text={data.text} speed={data.speed} gameStarted={gameStarted}/>
+    const all_pieces = activeWords.map((data) =>
+        <GamePiece key={data.text} text={data.text} speed={data.speed} gameStarted={gameStarted} removeWord={() => removeWord(data.text)}/>
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
@@ -31,7 +40,7 @@ function GameBoard({addToScore}) {
             addToScore(10);
             setInput('');
             // Destroy word - user already wrote it
-            setActiveWords(prev => prev.filter(word => word.text !== currentInput))
+            removeWord(currentInput);
         }
         else
             setInput(currentInput);
