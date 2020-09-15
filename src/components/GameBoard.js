@@ -17,11 +17,10 @@ function GameBoard({addToScore}) {
     };
 
     useEffect(() => {
-        if(!gameStarted)
+        if(!gameStarted || nextWordIndex >= all_data.length)
             return;
         const addWord = () => {
-            // TODO: Add random word from all_data, make sure to not add same word twice
-            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex % all_data.length], key: nextWordIndex}]);
+            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex], key: nextWordIndex}]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
