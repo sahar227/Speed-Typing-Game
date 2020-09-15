@@ -6,7 +6,7 @@ import GamePiece from './GamePiece';
 
 const all_data = [{ text: "Hello", speed: 6 }, { text: "my", speed: 2 }, { text: "TEST", speed: 3 }];
 
-function GameBoard({addToScore}) {
+function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
@@ -15,6 +15,10 @@ function GameBoard({addToScore}) {
     const removeWord = (word) => {
         setActiveWords(prev => prev.filter(data => data.text !== word));
     };
+
+    const addToScore = (points) => {
+        setScore((prev) => prev + points);
+      };
 
     useEffect(() => {
         if(!gameStarted || nextWordIndex >= all_data.length)
@@ -45,14 +49,24 @@ function GameBoard({addToScore}) {
         else
             setInput(currentInput);
     }
+    const handleClick = () => {
+        if(!gameStarted)
+            setGameStarted(true);
+        else { // restart the game
+            setNextWordIndex(0);
+            setActiveWords([]);
+            setInput('');
+            setScore(0);
+        }
+    }
     return (
         <>
             <div className="gameBoard">
                 {all_pieces}
             </div>
             <div className="buttonsRow">
-                <Button className="start_game_btn" variant="contained" color="primary" onClick={() => setGameStarted(true)}>
-                    Start Game
+                <Button className="start_game_btn" variant="contained" color="primary" onClick={handleClick}>
+                    {!gameStarted ? 'Start Game' : 'Restart Game'}
                 </Button >
                 <br />
                 <Input id="game_txt" value={input} onChange={checkWord} className="game_txt" placeholder="Write Here and Press Enter" inputProps={{ 'aria-label': 'description' }} disabled={!gameStarted} />

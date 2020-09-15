@@ -9,16 +9,13 @@ import './styles.scss';
 
 function App() {
   const [score, setScore] = useState(0);
-  const addToScore = (points) => {
-    setScore((prev) => prev + points);
-  };
   return (
     <>
       <div className="App">
         <Header />
         <Body />
         <Score score={score}/>
-        <GameBoard addToScore={addToScore}/>
+        <GameBoard setScore={setScore}/>
       </div>
     </>
   );
