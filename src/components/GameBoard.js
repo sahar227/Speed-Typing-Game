@@ -21,7 +21,7 @@ function GameBoard({addToScore}) {
             return;
         const addWord = () => {
             // TODO: Add random word from all_data, make sure to not add same word twice
-            setActiveWords((prev) => [...prev, all_data[nextWordIndex % all_data.length]]);
+            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex % all_data.length], key: nextWordIndex}]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
@@ -32,7 +32,7 @@ function GameBoard({addToScore}) {
     }, [gameStarted, nextWordIndex]);
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.text} text={data.text} speed={data.speed} gameStarted={gameStarted} removeWord={() => removeWord(data.text)}/>
+        <GamePiece key={data.key} text={data.text} speed={data.speed} gameStarted={gameStarted} removeWord={() => removeWord(data.text)}/>
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
