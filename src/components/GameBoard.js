@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
@@ -10,8 +10,7 @@ function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
-    const [nextWordIndex, setNextWordIndex] = useState(0);
-
+    const nextWordIndex = useRef(0);
     const removeWord = (word) => {
         setActiveWords(prev => prev.filter(data => data.text !== word));
     };
@@ -21,18 +20,18 @@ function GameBoard({setScore}) {
       };
 
     useEffect(() => {
-        if(!gameStarted || nextWordIndex >= all_data.length)
+        if(!gameStarted || nextWordIndex.current >= all_data.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex], key: nextWordIndex}]);
-            setNextWordIndex(prev => prev + 1);
+            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex.current], key: nextWordIndex.current}]);
+            nextWordIndex.current = nextWordIndex.current + 1;
         }
         const interval = setInterval(() => {
             addWord();
         // TODO: Consider making the interval shorten over time
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted, nextWordIndex]);
+    }, [gameStarted]);
 
     const all_pieces = activeWords.map((data) =>
         <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)}/>
@@ -53,7 +52,7 @@ function GameBoard({setScore}) {
         if(!gameStarted)
             setGameStarted(true);
         else { // restart the game
-            setNextWordIndex(0);
+            nextWordIndex.current = 0;
             setActiveWords([]);
             setInput('');
             setScore(0);
