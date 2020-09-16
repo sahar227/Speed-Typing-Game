@@ -1,7 +1,7 @@
 import React from 'react'
 import "./GamePiece.css"
 
-function GamePiece({text, speed, gameStarted, removeWord}) {
+function GamePiece({text, speed, removeWord}) {
     return (
         <div className="game-piece">
             <div>
