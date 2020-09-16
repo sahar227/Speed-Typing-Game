@@ -3,11 +3,9 @@ import "./GamePiece.css"
 
 function GamePiece({text, speed, removeWord}) {
     return (
-        <div className="game-piece">
-            <div>
-                <p onAnimationEnd={removeWord} style={{animation: `marquee ${speed}s linear forwards`}}>{text}</p>
+            <div onAnimationEnd={removeWord} style={{animation: `left_to_right ${speed}s linear forwards`}}>
+                <p className="game-piece">{text}</p>
             </div>
-        </div >
     )
 }
 
