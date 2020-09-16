@@ -35,7 +35,7 @@ function GameBoard({setScore}) {
     }, [gameStarted, nextWordIndex]);
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.key} text={data.text} speed={data.speed} gameStarted={gameStarted} removeWord={() => removeWord(data.text)}/>
+        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)}/>
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
@@ -69,7 +69,7 @@ function GameBoard({setScore}) {
                     {!gameStarted ? 'Start Game' : 'Restart Game'}
                 </Button >
                 <br />
-                <Input id="game_txt" value={input} onChange={checkWord} className="game_txt" placeholder="Write Here and Press Enter" inputProps={{ 'aria-label': 'description' }} disabled={!gameStarted} />
+                <Input value={input} onChange={checkWord} className="game_txt" placeholder="Write Here and Press Enter" inputProps={{ 'aria-label': 'description' }} disabled={!gameStarted} />
             </div>
         </>
     )
