@@ -4,13 +4,15 @@ import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
 
-const all_data = [{ text: "Hello", speed: 6 }, { text: "my", speed: 2 }, { text: "TEST", speed: 3 }];
+const all_data = [{ text: "Hello"}, { text: "my"}, { text: "TEST"}];
 
 function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
     const nextWordIndex = useRef(0);
+    const baseGameSpeed = useRef(5);
+    const speedModifier = useRef(3);
     const removeWord = (word) => {
         setActiveWords(prev => prev.filter(data => data.text !== word));
     };
@@ -23,7 +25,7 @@ function GameBoard({setScore}) {
         if(!gameStarted || nextWordIndex.current >= all_data.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex.current], key: nextWordIndex.current}]);
+            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex.current], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex.current}]);
             nextWordIndex.current = nextWordIndex.current + 1;
         }
         const interval = setInterval(() => {
