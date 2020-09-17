@@ -5,8 +5,8 @@ import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
 import axios from 'axios';
 
-// const all_data = [{ text: "Hello"}, { text: "my"}, { text: "TEST"}];
 const amountOfWords = 20;
+const startLife = 3;
 
 function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
@@ -14,9 +14,15 @@ function GameBoard({setScore}) {
     const [activeWords, setActiveWords] = useState([]);
     const [allData, setAllData] = useState([]);
     const [timesRestarted, setTimesRestarted] = useState(0);
+    const [lives, setLives] = useState(startLife);
     const nextWordIndex = useRef(0);
     const baseGameSpeed = useRef(5);
     const speedModifier = useRef(3);
+
+    const reduceLife = () => {
+        setLives(prev => prev - 1);
+    };
+
     const removeWord = (word) => {
         setActiveWords(prev => prev.filter(data => data.text !== word));
     };
@@ -49,7 +55,7 @@ function GameBoard({setScore}) {
     }, [gameStarted, allData]);
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)}/>
+        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife}/>
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
@@ -72,6 +78,7 @@ function GameBoard({setScore}) {
             setInput('');
             setScore(0);
             setTimesRestarted(prev => prev + 1);
+            setLives(startLife);
         }
     }
     return (
