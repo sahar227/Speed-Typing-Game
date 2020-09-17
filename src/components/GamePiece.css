@@ -1,9 +1,12 @@
 div {
     overflow: hidden;
   }
-  
-  
-  @keyframes marquee {
+
+.game-piece {
+  display: inline-block;
+}
+
+  @keyframes left_to_right {
     from {transform: translateX(-50%); }
     to {transform: translateX(50%); }
   }

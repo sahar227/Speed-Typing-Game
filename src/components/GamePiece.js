@@ -1,17 +1,11 @@
 import React from 'react'
 import "./GamePiece.css"
 
-function GamePiece({text, speed, gameStarted, removeWord}) {
-    const style = {
-        animation: gameStarted ? `marquee ${speed}s linear forwards` : '',
-        display: gameStarted ? 'block' : 'none'
-    }
+function GamePiece({text, speed, removeWord}) {
     return (
-        <div className="game-piece">
-            <div>
-                <p onAnimationEnd={removeWord} style={style}>{text}</p>
+            <div onAnimationEnd={removeWord} style={{animation: `left_to_right ${speed}s linear forwards`}}>
+                <p className="game-piece">{text}</p>
             </div>
-        </div >
     )
 }
 
