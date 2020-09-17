@@ -15,7 +15,7 @@ function GameBoard({setScore}) {
     const [allData, setAllData] = useState([]);
     const [timesRestarted, setTimesRestarted] = useState(0);
     const [lives, setLives] = useState(startLife);
-    const nextWordIndex = useRef(0);
+    const [nextWordIndex, setNextWordIndex] = useState(0);
     const baseGameSpeed = useRef(5);
     const speedModifier = useRef(3);
 
@@ -33,7 +33,7 @@ function GameBoard({setScore}) {
     useEffect(() => {
         const fetchItems = async () => {
             const words = await axios(
-                `https://random-word-api.herokuapp.com//word?number=${amountOfWords}`
+                `https://random-word-api.herokuapp.com//word?number=${amountOfWords}&swear=0`
             );
             setAllData(words.data.map(word => { return {text: word}}));
         }
@@ -41,18 +41,20 @@ function GameBoard({setScore}) {
     }, [timesRestarted]);
 
     useEffect(() => {
-        if(!gameStarted || nextWordIndex.current >= allData.length)
+        if(!gameStarted || nextWordIndex >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...allData[nextWordIndex.current], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex.current}]);
-            nextWordIndex.current = nextWordIndex.current + 1;
+            setActiveWords((prev) => [...prev, {...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex}]);
+            setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
-            addWord();
-        // TODO: Consider making the interval shorten over time
+            if(nextWordIndex < allData.length)
+                addWord();
+            else
+                clearInterval(interval);
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted, allData]);
+    }, [gameStarted, allData, nextWordIndex]);
 
     const all_pieces = activeWords.map((data) =>
         <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife}/>
@@ -73,7 +75,7 @@ function GameBoard({setScore}) {
         if(!gameStarted)
             setGameStarted(true);
         else { // restart the game
-            nextWordIndex.current = 0;
+            setNextWordIndex(0);
             setActiveWords([]);
             setInput('');
             setScore(0);
@@ -83,6 +85,9 @@ function GameBoard({setScore}) {
     }
     return (
         <>
+            <div>
+                <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
+            </div>
             <div className="gameBoard">
                 {all_pieces}
             </div>
