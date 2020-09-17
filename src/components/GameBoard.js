@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
@@ -8,7 +8,7 @@ import axios from 'axios';
 const amountOfWords = 20;
 const startLife = 3;
 
-function GameBoard({setScore}) {
+function GameBoard({ setScore }) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
@@ -21,6 +21,16 @@ function GameBoard({setScore}) {
 
     const reduceLife = () => {
         setLives(prev => prev - 1);
+        if (lives === 1) {
+            setGameStarted(false);
+            setNextWordIndex(0);
+            setActiveWords([]);
+            setInput('');
+            setScore(0);
+            setTimesRestarted(prev => prev + 1);
+            setLives(startLife);
+        }
+        setInput('');
     };
 
     const removeWord = (word) => {
@@ -29,26 +39,27 @@ function GameBoard({setScore}) {
 
     const addToScore = (points) => {
         setScore((prev) => prev + points);
-      };
+    };
+
     useEffect(() => {
         const fetchItems = async () => {
             const words = await axios(
                 `https://random-word-api.herokuapp.com//word?number=${amountOfWords}&swear=0`
             );
-            setAllData(words.data.map(word => { return {text: word}}));
+            setAllData(words.data.map(word => { return { text: word } }));
         }
         fetchItems();
     }, [timesRestarted]);
 
     useEffect(() => {
-        if(!gameStarted || nextWordIndex >= allData.length)
+        if (!gameStarted || nextWordIndex >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex}]);
+            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex }]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
-            if(nextWordIndex < allData.length)
+            if (nextWordIndex < allData.length)
                 addWord();
             else
                 clearInterval(interval);
@@ -57,12 +68,12 @@ function GameBoard({setScore}) {
     }, [gameStarted, allData, nextWordIndex]);
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife}/>
+        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
         // TODO: consider using dictionary instead of array for more efficient search
-        if(activeWords.filter(data => data.text === currentInput).length > 0) {
+        if (activeWords.filter(data => data.text === currentInput).length > 0) {
             addToScore(10);
             setInput('');
             // Destroy word - user already wrote it
@@ -72,9 +83,10 @@ function GameBoard({setScore}) {
             setInput(currentInput);
     }
     const handleClick = () => {
-        if(!gameStarted)
+        if (!gameStarted)
             setGameStarted(true);
         else { // restart the game
+            setGameStarted(false);
             setNextWordIndex(0);
             setActiveWords([]);
             setInput('');
@@ -87,6 +99,8 @@ function GameBoard({setScore}) {
         <>
             <div>
                 <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
+                <p>Number of Lives: {lives}</p>
+                <p style={{ color: "red" }}>{!gameStarted ? 'Game Over' : null}</p>
             </div>
             <div className="gameBoard">
                 {all_pieces}

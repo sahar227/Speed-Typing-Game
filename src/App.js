@@ -1,23 +1,22 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import Header from './components/Header'
-import Body from './components/Body'
-import GameBoard from './components/GameBoard'
-import Score from './components/Score'
-
+import Header from './components/Header';
+import Home from './components/Home';
 import './styles.scss';
+import Settings from './components/Settings';
+import { Route, BrowserRouter as Router } from "react-router-dom";
+import HighScores from './components/HighScores';
 
 function App() {
-  const [score, setScore] = useState(0);
   return (
-    <>
+    <Router>
       <div className="App">
         <Header />
-        <Body />
-        <Score score={score}/>
-        <GameBoard setScore={setScore}/>
+        <Route path="/Speed-Typing-Game" component={Home} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/high_scores" component={HighScores} />
       </div>
-    </>
+    </Router>
   );
 }
 
