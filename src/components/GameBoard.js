@@ -3,16 +3,26 @@ import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
+import axios from 'axios';
 
-const all_data = [{ text: "Hello"}, { text: "my"}, { text: "TEST"}];
+const amountOfWords = 20;
+const startLife = 3;
 
 function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
-    const nextWordIndex = useRef(0);
+    const [allData, setAllData] = useState([]);
+    const [timesRestarted, setTimesRestarted] = useState(0);
+    const [lives, setLives] = useState(startLife);
+    const [nextWordIndex, setNextWordIndex] = useState(0);
     const baseGameSpeed = useRef(5);
     const speedModifier = useRef(3);
+
+    const reduceLife = () => {
+        setLives(prev => prev - 1);
+    };
+
     const removeWord = (word) => {
         setActiveWords(prev => prev.filter(data => data.text !== word));
     };
@@ -20,23 +30,34 @@ function GameBoard({setScore}) {
     const addToScore = (points) => {
         setScore((prev) => prev + points);
       };
+    useEffect(() => {
+        const fetchItems = async () => {
+            const words = await axios(
+                `https://random-word-api.herokuapp.com//word?number=${amountOfWords}&swear=0`
+            );
+            setAllData(words.data.map(word => { return {text: word}}));
+        }
+        fetchItems();
+    }, [timesRestarted]);
 
     useEffect(() => {
-        if(!gameStarted || nextWordIndex.current >= all_data.length)
+        if(!gameStarted || nextWordIndex >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex.current], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex.current}]);
-            nextWordIndex.current = nextWordIndex.current + 1;
+            setActiveWords((prev) => [...prev, {...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex}]);
+            setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
-            addWord();
-        // TODO: Consider making the interval shorten over time
+            if(nextWordIndex < allData.length)
+                addWord();
+            else
+                clearInterval(interval);
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted]);
+    }, [gameStarted, allData, nextWordIndex]);
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)}/>
+        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife}/>
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
@@ -54,14 +75,19 @@ function GameBoard({setScore}) {
         if(!gameStarted)
             setGameStarted(true);
         else { // restart the game
-            nextWordIndex.current = 0;
+            setNextWordIndex(0);
             setActiveWords([]);
             setInput('');
             setScore(0);
+            setTimesRestarted(prev => prev + 1);
+            setLives(startLife);
         }
     }
     return (
         <>
+            <div>
+                <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
+            </div>
             <div className="gameBoard">
                 {all_pieces}
             </div>
