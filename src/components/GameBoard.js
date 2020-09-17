@@ -3,13 +3,17 @@ import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
+import axios from 'axios';
 
-const all_data = [{ text: "Hello"}, { text: "my"}, { text: "TEST"}];
+// const all_data = [{ text: "Hello"}, { text: "my"}, { text: "TEST"}];
+const amountOfWords = 20;
 
 function GameBoard({setScore}) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
+    const [allData, setAllData] = useState([]);
+    const [timesRestarted, setTimesRestarted] = useState(0);
     const nextWordIndex = useRef(0);
     const baseGameSpeed = useRef(5);
     const speedModifier = useRef(3);
@@ -20,12 +24,21 @@ function GameBoard({setScore}) {
     const addToScore = (points) => {
         setScore((prev) => prev + points);
       };
+    useEffect(() => {
+        const fetchItems = async () => {
+            const words = await axios(
+                `https://random-word-api.herokuapp.com//word?number=${amountOfWords}`
+            );
+            setAllData(words.data.map(word => { return {text: word}}));
+        }
+        fetchItems();
+    }, [timesRestarted]);
 
     useEffect(() => {
-        if(!gameStarted || nextWordIndex.current >= all_data.length)
+        if(!gameStarted || nextWordIndex.current >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, {...all_data[nextWordIndex.current], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex.current}]);
+            setActiveWords((prev) => [...prev, {...allData[nextWordIndex.current], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex.current}]);
             nextWordIndex.current = nextWordIndex.current + 1;
         }
         const interval = setInterval(() => {
@@ -33,7 +46,7 @@ function GameBoard({setScore}) {
         // TODO: Consider making the interval shorten over time
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted]);
+    }, [gameStarted, allData]);
 
     const all_pieces = activeWords.map((data) =>
         <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)}/>
@@ -58,6 +71,7 @@ function GameBoard({setScore}) {
             setActiveWords([]);
             setInput('');
             setScore(0);
+            setTimesRestarted(prev => prev + 1);
         }
     }
     return (
