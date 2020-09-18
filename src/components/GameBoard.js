@@ -97,7 +97,7 @@ function GameBoard({ setScore }) {
             <div>
                 <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
                 <p>Number of Lives: {lives}</p>
-                <p style={{ color: "red" }}>{!gameStarted ? 'Game Over' : null}</p>
+                <p style={{ color: "red" }}>{!gameStarted && timesRestarted > 0 ? 'Game Over' : null}</p>
             </div>
             <div className="gameBoard">
                 {all_pieces}
