@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
@@ -7,6 +7,8 @@ import axios from 'axios';
 
 const amountOfWords = 20;
 const startLife = 3;
+const baseGameSpeed = 8;
+const speedModifier = 5;
 
 function GameBoard({ setScore }) {
     const [gameStarted, setGameStarted] = useState(false);
@@ -16,21 +18,19 @@ function GameBoard({ setScore }) {
     const [timesRestarted, setTimesRestarted] = useState(0);
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
-    const baseGameSpeed = useRef(5);
-    const speedModifier = useRef(3);
+
+    const restartGame = () => {
+        setGameStarted(false);
+        setActiveWords([]);
+        setInput('');
+        setTimesRestarted(prev => prev + 1);
+    }
 
     const reduceLife = () => {
         setLives(prev => prev - 1);
         if (lives === 1) {
-            setGameStarted(false);
-            setNextWordIndex(0);
-            setActiveWords([]);
-            setInput('');
-            setScore(0);
-            setTimesRestarted(prev => prev + 1);
-            setLives(startLife);
+            restartGame();
         }
-        setInput('');
     };
 
     const removeWord = (word) => {
@@ -55,7 +55,7 @@ function GameBoard({ setScore }) {
         if (!gameStarted || nextWordIndex >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex }]);
+            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex }]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
@@ -83,16 +83,14 @@ function GameBoard({ setScore }) {
             setInput(currentInput);
     }
     const handleClick = () => {
-        if (!gameStarted)
+        if (!gameStarted) {
             setGameStarted(true);
-        else { // restart the game
-            setGameStarted(false);
-            setNextWordIndex(0);
-            setActiveWords([]);
-            setInput('');
             setScore(0);
-            setTimesRestarted(prev => prev + 1);
+            setNextWordIndex(0);
             setLives(startLife);
+        }
+        else {
+            restartGame();
         }
     }
     return (
@@ -100,7 +98,7 @@ function GameBoard({ setScore }) {
             <div>
                 <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
                 <p>Number of Lives: {lives}</p>
-                <p style={{ color: "red" }}>{!gameStarted ? 'Game Over' : null}</p>
+                <p style={{ color: "red" }}>{!gameStarted && timesRestarted > 0 ? 'Game Over' : null}</p>
             </div>
             <div className="gameBoard">
                 {all_pieces}
