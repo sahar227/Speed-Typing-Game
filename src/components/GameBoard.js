@@ -19,18 +19,21 @@ function GameBoard({ setScore }) {
     const baseGameSpeed = useRef(5);
     const speedModifier = useRef(3);
 
+    const restartGame = () => {
+        setGameStarted(false);
+        setNextWordIndex(0);
+        setActiveWords([]);
+        setInput('');
+        setScore(0);
+        setTimesRestarted(prev => prev + 1);
+        setLives(startLife);
+    }
+
     const reduceLife = () => {
         setLives(prev => prev - 1);
         if (lives === 1) {
-            setGameStarted(false);
-            setNextWordIndex(0);
-            setActiveWords([]);
-            setInput('');
-            setScore(0);
-            setTimesRestarted(prev => prev + 1);
-            setLives(startLife);
+            restartGame();
         }
-        setInput('');
     };
 
     const removeWord = (word) => {
@@ -85,14 +88,8 @@ function GameBoard({ setScore }) {
     const handleClick = () => {
         if (!gameStarted)
             setGameStarted(true);
-        else { // restart the game
-            setGameStarted(false);
-            setNextWordIndex(0);
-            setActiveWords([]);
-            setInput('');
-            setScore(0);
-            setTimesRestarted(prev => prev + 1);
-            setLives(startLife);
+        else {
+            restartGame();
         }
     }
     return (
