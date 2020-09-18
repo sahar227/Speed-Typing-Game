@@ -24,7 +24,6 @@ function GameBoard({ setScore }) {
         setNextWordIndex(0);
         setActiveWords([]);
         setInput('');
-        setScore(0);
         setTimesRestarted(prev => prev + 1);
         setLives(startLife);
     }
@@ -86,8 +85,10 @@ function GameBoard({ setScore }) {
             setInput(currentInput);
     }
     const handleClick = () => {
-        if (!gameStarted)
+        if (!gameStarted) {
             setGameStarted(true);
+            setScore(0);
+        }
         else {
             restartGame();
         }
