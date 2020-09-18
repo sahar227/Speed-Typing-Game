@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
@@ -7,6 +7,8 @@ import axios from 'axios';
 
 const amountOfWords = 20;
 const startLife = 3;
+const baseGameSpeed = 8;
+const speedModifier = 5;
 
 function GameBoard({ setScore }) {
     const [gameStarted, setGameStarted] = useState(false);
@@ -16,16 +18,12 @@ function GameBoard({ setScore }) {
     const [timesRestarted, setTimesRestarted] = useState(0);
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
-    const baseGameSpeed = useRef(5);
-    const speedModifier = useRef(3);
 
     const restartGame = () => {
         setGameStarted(false);
-        setNextWordIndex(0);
         setActiveWords([]);
         setInput('');
         setTimesRestarted(prev => prev + 1);
-        setLives(startLife);
     }
 
     const reduceLife = () => {
@@ -57,7 +55,7 @@ function GameBoard({ setScore }) {
         if (!gameStarted || nextWordIndex >= allData.length)
             return;
         const addWord = () => {
-            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed.current + Math.random() * speedModifier.current, key: nextWordIndex }]);
+            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex }]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
@@ -88,6 +86,8 @@ function GameBoard({ setScore }) {
         if (!gameStarted) {
             setGameStarted(true);
             setScore(0);
+            setNextWordIndex(0);
+            setLives(startLife);
         }
         else {
             restartGame();
