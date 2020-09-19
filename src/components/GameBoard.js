@@ -8,6 +8,8 @@ import axios from 'axios';
 const startLife = 3;
 const speedModifier = 5;
 
+const RandomColors = ["red", "green", "yellow", "blue", "black", "white"];
+
 function GameBoard({ score, setScore, settings }) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
@@ -17,9 +19,14 @@ function GameBoard({ score, setScore, settings }) {
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
     const [name, setName] = useState('player');
+    const [color, setColor] = useState("black")
 
-    const amountOfWords = settings.numberOfWords[0];
+    var amountOfWords = settings.numberOfWords[0];
     const baseGameSpeed = settings.speed[0];
+    const randomColors = settings.randomColors[0];
+
+    if (amountOfWords === "")
+        amountOfWords = 10000
 
     const saveScore = (name, score) => {
         let previousScores = localStorage.getItem('scores');
@@ -27,6 +34,12 @@ function GameBoard({ score, setScore, settings }) {
         localStorage.setItem('scores', JSON.stringify([...previousScores, { name, score }]));
     }
 
+    const chooseRandomColor = () => {
+        if (randomColors === false)
+            setColor("white");
+        else
+            setColor(String(RandomColors[Math.round(Math.random() * RandomColors.length)]));
+    }
     const restartGame = () => {
         setGameStarted(false);
         setActiveWords([]);
@@ -68,6 +81,7 @@ function GameBoard({ score, setScore, settings }) {
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
+            chooseRandomColor();
             if (nextWordIndex < allData.length)
                 addWord();
             else
@@ -76,8 +90,9 @@ function GameBoard({ score, setScore, settings }) {
         return () => clearInterval(interval);
     }, [gameStarted, allData, nextWordIndex, baseGameSpeed]);
 
+
     const all_pieces = activeWords.map((data) =>
-        <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
+        <GamePiece color={color} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
@@ -110,10 +125,16 @@ function GameBoard({ score, setScore, settings }) {
             </>
         )
     }
+
+    if (amountOfWords === 10000)
+        var lineOfNumberOfWords = nextWordIndex
+    else
+        lineOfNumberOfWords = nextWordIndex + "/" + amountOfWords
+
     return (
         <>
             <div>
-                <p>Number of Words: {nextWordIndex}/{amountOfWords}</p>
+                <p>Number of Words: {lineOfNumberOfWords}</p>
                 <p>Number of Lives: {lives}</p>
                 <p style={{ color: "red" }}>{!gameStarted && timesRestarted > 0 ? 'Game Over' : null}</p>
             </div>
