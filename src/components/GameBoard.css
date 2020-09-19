@@ -12,4 +12,10 @@
 .game_txt {
     margin: 20px;
     width: 50%;
+    background-color: #263a50;
+}
+
+.username_input {
+    margin-top: 5px;
+    background-color: #263a50;
 }

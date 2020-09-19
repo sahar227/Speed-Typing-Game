@@ -5,12 +5,10 @@ import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
 import axios from 'axios';
 
-const amountOfWords = 20;
 const startLife = 3;
-const baseGameSpeed = 8;
 const speedModifier = 5;
 
-function GameBoard({ setScore }) {
+function GameBoard({ score, setScore, settings }) {
     const [gameStarted, setGameStarted] = useState(false);
     const [input, setInput] = useState('');
     const [activeWords, setActiveWords] = useState([]);
@@ -18,12 +16,23 @@ function GameBoard({ setScore }) {
     const [timesRestarted, setTimesRestarted] = useState(0);
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
+    const [name, setName] = useState('player');
+
+    const amountOfWords = settings.numberOfWords[0];
+    const baseGameSpeed = settings.speed[0];
+
+    const saveScore = (name, score) => {
+        let previousScores = localStorage.getItem('scores');
+        previousScores = previousScores ? JSON.parse(previousScores) : [];
+        localStorage.setItem('scores', JSON.stringify([...previousScores, { name, score }]));
+    }
 
     const restartGame = () => {
         setGameStarted(false);
         setActiveWords([]);
         setInput('');
         setTimesRestarted(prev => prev + 1);
+        saveScore(name, score);
     }
 
     const reduceLife = () => {
@@ -49,7 +58,7 @@ function GameBoard({ setScore }) {
             setAllData(words.data.map(word => { return { text: word } }));
         }
         fetchItems();
-    }, [timesRestarted]);
+    }, [timesRestarted, amountOfWords]);
 
     useEffect(() => {
         if (!gameStarted || nextWordIndex >= allData.length)
@@ -65,7 +74,7 @@ function GameBoard({ setScore }) {
                 clearInterval(interval);
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted, allData, nextWordIndex]);
+    }, [gameStarted, allData, nextWordIndex, baseGameSpeed]);
 
     const all_pieces = activeWords.map((data) =>
         <GamePiece key={data.key} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
@@ -93,6 +102,14 @@ function GameBoard({ setScore }) {
             restartGame();
         }
     }
+    const renderNameInput = () => {
+        return (
+            <>
+                <Input className="username_input" value={name} onChange={(e => setName(e.target.value))} placeholder="Enter your name" />
+                <br />
+            </>
+        )
+    }
     return (
         <>
             <div>
@@ -104,9 +121,11 @@ function GameBoard({ setScore }) {
                 {all_pieces}
             </div>
             <div className="buttonsRow">
+                {!gameStarted ? renderNameInput() : null}
                 <Button className="start_game_btn" variant="contained" color="primary" onClick={handleClick}>
                     {!gameStarted ? 'Start Game' : 'Restart Game'}
                 </Button >
+
                 <br />
                 <Input value={input} onChange={checkWord} className="game_txt" placeholder="Write Here and Press Enter" inputProps={{ 'aria-label': 'description' }} disabled={!gameStarted} />
             </div>

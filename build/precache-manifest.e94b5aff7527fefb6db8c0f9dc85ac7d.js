@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "14d39065d41911037f8ceeebbcf76569",
-    "url": "/Speed-Typing-Game/index.html"
+    "url": "/Speed-Typing-Game/"
   },
   {
     "revision": "bef81a180dc2f99d906a",
