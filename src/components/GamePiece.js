@@ -6,9 +6,17 @@ function GamePiece({ text, speed, removeWord, reduceLife }) {
         reduceLife();
         removeWord();
     };
+
+    const RandomColors = ["red", "green", "yellow", "blue", "black", "white"];
+
+    const chooseRandomColor = () => {
+        return {
+            color: String(RandomColors[Math.round(Math.random() * RandomColors.length)])
+        }
+    }
     return (
         <div onAnimationEnd={handleAnimationEnd} style={{ animation: `left_to_right ${speed}s linear forwards` }}>
-            <p className="game-piece">{text}</p>
+            <p style={chooseRandomColor()} className="game-piece">{text}</p>
         </div>
     )
 }

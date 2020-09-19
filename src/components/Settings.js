@@ -17,7 +17,7 @@ function Settings({ settings }) {
         }
     }, [setSpeed, setNumberOfWords, setRandomColors]);
 
-    const Submit = (e) => {
+    var Submit = (e) => {
         e.preventDefault();
 
         localStorage.setItem('speed', speed);

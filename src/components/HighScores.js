@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./HighScores.css"
 import { useTable } from 'react-table'
+import Button from '@material-ui/core/Button';
 
 function HighScores() {
     const [scores, setScores] = useState([]);
@@ -54,7 +55,8 @@ function HighScores() {
     return (
         <div>
             <h1>High Scores</h1>
-            <button onClick={clearScores}>Clear Scores</button>
+            <Button variant="contained" color={"secondary"} onClick={clearScores}>Clear Scores</Button>
+            <br></br><br></br>
             <table {...getTableProps()} style={{ border: 'solid 1px blue', width: '50%', margin: 'auto' }}>
                 <thead>
                     {headerGroups.map(headerGroup => (

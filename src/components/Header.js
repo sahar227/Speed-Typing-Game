@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import DarkModeToggle from './DarkModeToggle';
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const Nav = styled.div`
   background-color: #fff;
@@ -41,14 +41,15 @@ const NavRight = styled.div`
 
 function Header() {
   return (
+    <Router>
       <Nav className="Header">
         <NavHeader>
           <NavLeft>Speed Typing Game</NavLeft>
           <NavCenter>
             {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}
-            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/Speed-Typing-Game">🏠</Link>
-            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/settings">⚙️</Link>
-            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/high_scores">🏆</Link>
+            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<a style={{ color: "red", textDecoration: "none" }} href="/Speed-Typing-Game">🏠</a>
+            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<a style={{ color: "red", textDecoration: "none" }} href="/settings">⚙️</a>
+            {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<a style={{ color: "red", textDecoration: "none" }} href="/high_scores">🏆</a>
 
           </NavCenter>
 
@@ -57,6 +58,7 @@ function Header() {
           </NavRight>
         </NavHeader>
       </Nav>
+    </Router >
   );
 }
 
