@@ -19,7 +19,6 @@ function GameBoard({ score, setScore, settings }) {
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
     const [name, setName] = useState('player');
-    const [color, setColor] = useState("black")
 
     const [amountOfWords, setAmountOfWords] = settings.numberOfWords;
     const baseGameSpeed = settings.speed[0];
@@ -70,18 +69,17 @@ function GameBoard({ score, setScore, settings }) {
     useEffect(() => {
         if (!gameStarted || nextWordIndex >= allData.length)
             return;
-        const addWord = () => {
-            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex }]);
-            setNextWordIndex(prev => prev + 1);
-        }
         const chooseRandomColor = () => {
             if (randomColors === false)
-                setColor("white");
+                return "white";
             else
-                setColor(String(RandomColors[Math.round(Math.random() * RandomColors.length)]));
+                return String(RandomColors[Math.round(Math.random() * RandomColors.length)]);
+        }
+        const addWord = () => {
+            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex, color:  chooseRandomColor()}]);
+            setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
-            chooseRandomColor();
             if (nextWordIndex < allData.length)
                 addWord();
             else
@@ -92,7 +90,7 @@ function GameBoard({ score, setScore, settings }) {
 
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece color={color} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
+        <GamePiece {...data} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;

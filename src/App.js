@@ -8,9 +8,6 @@ import { Route, BrowserRouter as Router } from "react-router-dom";
 import HighScores from './components/HighScores';
 
 function App() {
-  // const [speed, setSpeed] = useState(1);
-  // const [numberOfWords, setNumberOfWords] = useState(20);
-  // const [randomColors, setRandomColors] = useState(false);
   const settings = {
     speed: useState(1),
     numberOfWords: useState(20),
