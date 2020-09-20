@@ -1,25 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 function Settings({ settings }) {
     const [speed, setSpeed] = settings.speed;
     const [numberOfWords, setNumberOfWords] = settings.numberOfWords;
     const [randomColors, setRandomColors] = settings.randomColors;
 
-    useEffect(() => {
-        if (localStorage.getItem("speed") !== undefined && localStorage.getItem("speed") !== null) {
-            setSpeed(localStorage.getItem("speed"));
-        }
-        if (localStorage.getItem("numberOfWords") !== undefined && localStorage.getItem("numberOfWords") !== null) {
-            setNumberOfWords(localStorage.getItem("numberOfWords"));
-        }
-        if (localStorage.getItem("randomColors") !== undefined && localStorage.getItem("randomColors") !== null) {
-            setRandomColors(localStorage.getItem("randomColors") === 'true');
-        }
-    }, [setSpeed, setNumberOfWords, setRandomColors]);
-
     const Submit = (e) => {
         e.preventDefault();
-
         localStorage.setItem('speed', speed);
         localStorage.setItem('numberOfWords', numberOfWords);
         localStorage.setItem('randomColors', randomColors);

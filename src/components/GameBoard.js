@@ -19,14 +19,13 @@ function GameBoard({ score, setScore, settings }) {
     const [lives, setLives] = useState(startLife);
     const [nextWordIndex, setNextWordIndex] = useState(0);
     const [name, setName] = useState('player');
-    const [color, setColor] = useState("black")
 
-    var amountOfWords = settings.numberOfWords[0];
+    const [amountOfWords, setAmountOfWords] = settings.numberOfWords;
     const baseGameSpeed = settings.speed[0];
     const randomColors = settings.randomColors[0];
 
     if (amountOfWords === "")
-        amountOfWords = 10000
+        setAmountOfWords(10000);
 
     const saveScore = (name, score) => {
         let previousScores = localStorage.getItem('scores');
@@ -34,12 +33,6 @@ function GameBoard({ score, setScore, settings }) {
         localStorage.setItem('scores', JSON.stringify([...previousScores, { name, score }]));
     }
 
-    const chooseRandomColor = () => {
-        if (randomColors === false)
-            setColor("white");
-        else
-            setColor(String(RandomColors[Math.round(Math.random() * RandomColors.length)]));
-    }
     const restartGame = () => {
         setGameStarted(false);
         setActiveWords([]);
@@ -76,23 +69,28 @@ function GameBoard({ score, setScore, settings }) {
     useEffect(() => {
         if (!gameStarted || nextWordIndex >= allData.length)
             return;
+        const chooseRandomColor = () => {
+            if (randomColors === false)
+                return "white";
+            else
+                return String(RandomColors[Math.round(Math.random() * RandomColors.length)]);
+        }
         const addWord = () => {
-            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex }]);
+            setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex, color:  chooseRandomColor()}]);
             setNextWordIndex(prev => prev + 1);
         }
         const interval = setInterval(() => {
-            chooseRandomColor();
             if (nextWordIndex < allData.length)
                 addWord();
             else
                 clearInterval(interval);
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted, allData, nextWordIndex, baseGameSpeed]);
+    }, [gameStarted, allData, nextWordIndex, baseGameSpeed, randomColors]);
 
 
     const all_pieces = activeWords.map((data) =>
-        <GamePiece color={color} text={data.text} speed={data.speed} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
+        <GamePiece {...data} removeWord={() => removeWord(data.text)} reduceLife={reduceLife} />
     )
     const checkWord = (e) => {
         const currentInput = e.target.value;
