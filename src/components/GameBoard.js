@@ -21,12 +21,12 @@ function GameBoard({ score, setScore, settings }) {
     const [name, setName] = useState('player');
     const [color, setColor] = useState("black")
 
-    var amountOfWords = settings.numberOfWords[0];
+    const [amountOfWords, setAmountOfWords] = settings.numberOfWords;
     const baseGameSpeed = settings.speed[0];
     const randomColors = settings.randomColors[0];
 
     if (amountOfWords === "")
-        amountOfWords = 10000
+        setAmountOfWords(10000);
 
     const saveScore = (name, score) => {
         let previousScores = localStorage.getItem('scores');
@@ -34,12 +34,6 @@ function GameBoard({ score, setScore, settings }) {
         localStorage.setItem('scores', JSON.stringify([...previousScores, { name, score }]));
     }
 
-    const chooseRandomColor = () => {
-        if (randomColors === false)
-            setColor("white");
-        else
-            setColor(String(RandomColors[Math.round(Math.random() * RandomColors.length)]));
-    }
     const restartGame = () => {
         setGameStarted(false);
         setActiveWords([]);
@@ -80,6 +74,12 @@ function GameBoard({ score, setScore, settings }) {
             setActiveWords((prev) => [...prev, { ...allData[nextWordIndex], speed: baseGameSpeed + Math.random() * speedModifier, key: nextWordIndex }]);
             setNextWordIndex(prev => prev + 1);
         }
+        const chooseRandomColor = () => {
+            if (randomColors === false)
+                setColor("white");
+            else
+                setColor(String(RandomColors[Math.round(Math.random() * RandomColors.length)]));
+        }
         const interval = setInterval(() => {
             chooseRandomColor();
             if (nextWordIndex < allData.length)
@@ -88,7 +88,7 @@ function GameBoard({ score, setScore, settings }) {
                 clearInterval(interval);
         }, 3000);
         return () => clearInterval(interval);
-    }, [gameStarted, allData, nextWordIndex, baseGameSpeed]);
+    }, [gameStarted, allData, nextWordIndex, baseGameSpeed, randomColors]);
 
 
     const all_pieces = activeWords.map((data) =>
