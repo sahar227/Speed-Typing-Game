@@ -30,7 +30,7 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Route path="/Speed-Typing-Game" render={() => <Home settings={settings} />} />
+        <Route exact path="/" render={() => <Home settings={settings} />} />
         <Route path="/settings" render={() => <Settings settings={settings} />} />
         <Route path="/high_scores" component={HighScores} />
       </div>

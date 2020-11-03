@@ -61,6 +61,8 @@ function GameBoard({ score, setScore, settings }) {
             const words = await axios(
                 `https://random-word-api.herokuapp.com//word?number=${amountOfWords}&swear=0`
             );
+            if(!words)
+                return;
             setAllData(words.data.map(word => { return { text: word } }));
         }
         fetchItems();
