@@ -30,9 +30,9 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Route exact path="/" render={() => <Home settings={settings} />} />
-        <Route path="/settings" render={() => <Settings settings={settings} />} />
-        <Route path="/high_scores" component={HighScores} />
+        <Route path="/Speed-Typing-Game" render={() => <Home settings={settings} />} />
+        <Route path="/Speed-Typing-Game/settings" render={() => <Settings settings={settings} />} />
+        <Route path="/Speed-Typing-Game/high_scores" component={HighScores} />
       </div>
     </Router>
   );
