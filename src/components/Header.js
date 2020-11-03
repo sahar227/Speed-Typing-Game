@@ -46,9 +46,9 @@ function Header() {
         <NavLeft>Speed Typing Game</NavLeft>
         <NavCenter>
           {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}
-          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/Speed-Typing-Game">🏠</Link>
-          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/Speed-Typing-Game/settings">⚙️</Link>
-          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/Speed-Typing-Game/high_scores">🏆</Link>
+          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/">🏠</Link>
+          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/settings">⚙️</Link>
+          {/* eslint-disable-next-line jsx-a11y/accessible-emoji*/}<Link style={{ color: "red", textDecoration: "none" }} to="/high_scores">🏆</Link>
 
         </NavCenter>
 

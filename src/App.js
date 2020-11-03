@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import './styles.scss';
 import Settings from './components/Settings';
-import { Route, BrowserRouter as Router } from "react-router-dom";
+import { Route, HashRouter as Router } from "react-router-dom";
 import HighScores from './components/HighScores';
 
 function App() {
@@ -30,9 +30,9 @@ function App() {
     <Router>
       <div className="App">
         <Header />
-        <Route path="/Speed-Typing-Game" render={() => <Home settings={settings} />} />
-        <Route path="/Speed-Typing-Game/settings" render={() => <Settings settings={settings} />} />
-        <Route path="/Speed-Typing-Game/high_scores" component={HighScores} />
+        <Route exact path="/" render={() => <Home settings={settings} />} />
+        <Route path="/settings" render={() => <Settings settings={settings} />} />
+        <Route path="/high_scores" component={HighScores} />
       </div>
     </Router>
   );
