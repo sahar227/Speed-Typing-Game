@@ -3,7 +3,7 @@ import './GameBoard.css'
 import Button from '@material-ui/core/Button';
 import { Input } from '@material-ui/core';
 import GamePiece from './GamePiece';
-import axios from 'axios';
+import randomWords from 'random-words';
 
 const startLife = 3;
 const speedModifier = 5;
@@ -25,7 +25,7 @@ function GameBoard({ score, setScore, settings }) {
     const randomColors = settings.randomColors[0];
 
     if (amountOfWords === "")
-        setAmountOfWords(10000);
+        setAmountOfWords(100);
 
     const saveScore = (name, score) => {
         let previousScores = localStorage.getItem('scores');
@@ -57,16 +57,11 @@ function GameBoard({ score, setScore, settings }) {
     };
 
     useEffect(() => {
-        const fetchItems = async () => {
-            const words = await axios(
-                `https://random-word-api.herokuapp.com//word?number=${amountOfWords}&swear=0`
-            );
-            if(!words)
-                return;
-            setAllData(words.data.map(word => { return { text: word } }));
-        }
-        fetchItems();
-    }, [timesRestarted, amountOfWords]);
+        if(!gameStarted)
+            return;
+        const words = randomWords(amountOfWords);
+        setAllData(words.map(word => { return { text: word } }));
+    }, [timesRestarted, amountOfWords, setAllData, gameStarted]);
 
     useEffect(() => {
         if (!gameStarted || nextWordIndex >= allData.length)

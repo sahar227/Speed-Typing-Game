@@ -20,7 +20,7 @@ function Settings({ settings }) {
                 <input onChange={e => setSpeed(e.target.value)} type="number" id="speed" name="speed" min="1" max="10" value={speed} />
                 <br></br>
                 <label>Amount Of Words (Empty is infinite):</label>
-                <input onChange={e => setNumberOfWords(e.target.value)} type="number" id="amount_of_words" name="amount_of_words" min="1" value={numberOfWords} />
+                <input onChange={e => setNumberOfWords(parseInt(e.target.value))} type="number" id="amount_of_words" name="amount_of_words" min="1" value={numberOfWords} />
                 <br></br>
                 <label>Random Colors</label>
                 <input onChange={() => setRandomColors(prev => !prev)} type="checkbox" id="random_colors" name="random_colors" checked={randomColors} />

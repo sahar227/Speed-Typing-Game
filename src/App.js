@@ -19,7 +19,7 @@ function App() {
         settings.speed[1](localStorage.getItem("speed"));
     }
     if (localStorage.getItem("numberOfWords") !== undefined && localStorage.getItem("numberOfWords") !== null) {
-        settings.numberOfWords[1](localStorage.getItem("numberOfWords"));
+        settings.numberOfWords[1](parseInt(localStorage.getItem("numberOfWords")));
     }
     if (localStorage.getItem("randomColors") !== undefined && localStorage.getItem("randomColors") !== null) {
         settings.randomColors[1](localStorage.getItem("randomColors") === 'true');
