@@ -12,10 +12,8 @@
 .game_txt {
   margin: 20px;
   width: 50%;
-  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .username_input {
   margin-top: 5px;
-  background-color: rgba(0, 0, 0, 0.3);
 }
