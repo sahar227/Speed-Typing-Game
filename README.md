@@ -1,3 +1,11 @@
+# About the project
+
+Click here to play the game: [https://sahar227.github.io/Speed-Typing-Game/#/](https://sahar227.github.io/Speed-Typing-Game/#/)
+
+This game lets you challenge your typing speed as words appear on the screen and need to be typed before they disappear! Players can customize their experience by choosing between light and dark themes, as well as changing game settings such as: Speed words disappear in, whether words that appear have random colors and the amount of words that will appear per game session.
+
+This project was made as a collabortation between [netn10](https://github.com/netn10) and [sahar227](https://github.com/sahar227) using ReactJs and hooks.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
